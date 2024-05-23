@@ -8,8 +8,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage --browsers=ChromeHeadless",
-    "serve:ssr:pf-angular-dashboard": "node dist/pf-angular-dashboard/server/server.mjs",
     "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.html\""
   },
   "private": true,
