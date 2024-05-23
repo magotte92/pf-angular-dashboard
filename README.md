@@ -1,27 +1,29 @@
-# PfAngularDashboard
+# Crypto Dashboard
+[![Angular](https://img.shields.io/badge/Angular-v17.3-red?logo=angular)](https://angular.io/)
+[![NgRx](https://img.shields.io/badge/NgRx-v17.2-purple?logo=ngrx)](https://ngrx.io/)
+[![Highcharts](https://img.shields.io/badge/Highcharts-v4-blue?logo=highcharts)](https://www.highcharts.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v3.4.3-blue?logo=tailwindcss)](https://tailwindcss.com/)
+[![RxJS](https://img.shields.io/badge/RxJS-v7.8-purple?logo=reactivex)](https://rxjs.dev/)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.0.
+## Description
 
-## Development server
+This project is an Angular-based dashboard application that fetches data from the CoinGecko API and displays it in a data table with filtering, sorting, search, and pagination functionalities. It also visualizes the data in a chart using Highcharts. The state management is handled using NgRx, and RxJS is used for data transportation and manipulation.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Tech Stack
 
-## Code scaffolding
+- **Angular**: Framework for building client applications.
+- **NgRx**: Reactive state management for Angular.
+- **Highcharts**: Interactive charts for data visualization.
+- **Tailwind CSS**: Utility-first CSS framework for styling.
+- **RxJS**: Library for reactive programming using Observables.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Setup
 
-## Build
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run start:dev`
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Production Build
 
-## Running unit tests
+1. Build the project: `ng build`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
