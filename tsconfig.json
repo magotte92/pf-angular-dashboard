@@ -2,6 +2,13 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@pf-app": ["app/*"],
+      "@pf-app/models": ["app/models"],
+      "@pf-app/components": ["app/components"],
+      "@pf-app/services": ["app/services"]
+    },
     "outDir": "./dist/out-tsc",
     "strict": true,
     "noImplicitOverride": true,
