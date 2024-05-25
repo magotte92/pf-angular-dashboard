@@ -1,38 +1,90 @@
 <div class="container mx-auto p-4">
-  <h1 class="text-2xl font-bold mb-4 text-center">Cryptocurrency Market</h1>
-  <div class="overflow-x-auto shadow-lg rounded-lg">
-    <table class="min-w-full bg-white rounded-lg">
-      <thead>
-      <tr class="bg-gray-800 text-white">
-        <th class="px-4 py-2">ID</th>
-        <th class="px-4 py-2">Name</th>
-        <th class="px-4 py-2">Symbol</th>
-        <th class="px-4 py-2">Current Price</th>
-        <th class="px-4 py-2">Market Cap</th>
-        <th class="px-4 py-2">Total Volume</th>
-        <th class="px-4 py-2">High 24h</th>
-        <th class="px-4 py-2">Low 24h</th>
-        <th class="px-4 py-2">Price Change 24h (%)</th>
-        <th class="px-4 py-2">Circulating Supply</th>
-      </tr>
+  <div class="flex justify-between items-center mb-4">
+    <input
+      type="text"
+      placeholder="Search..."
+      class="border p-2 w-full md:w-1/3"
+      [(ngModel)]="searchQuery"
+      (ngModelChange)="onSearchChange($event)"
+    />
+    <div class="flex items-center ml-4">
+      <label for="perPage" class="mr-2">Items per page:</label>
+      <select
+        id="perPage"
+        class="border p-2"
+        [(ngModel)]="perPage"
+        (ngModelChange)="onPerPageChange($event)"
+      >
+        <option
+          *ngFor="let pageNo of PER_PAGE"
+          [ngValue]="pageNo"
+          [value]="pageNo"
+        >
+          {{ pageNo }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th *ngFor="let column of DISPLAYED_COLUMNS" class="py-2">
+            {{ column.replaceAll('_', ' ') | titlecase }}
+          </th>
+        </tr>
       </thead>
       <tbody>
-      <ng-container *ngIf="cryptoService.getCryptos() | async as cryptos">
-        <tr *ngFor="let crypto of cryptos" class="hover:bg-gray-100 border-b border-gray-200">
-          <td class="px-4 py-2">{{ crypto.id }}</td>
-          <td class="px-4 py-2">{{ crypto.name }}</td>
-          <td class="px-4 py-2">{{ crypto.symbol }}</td>
-          <td class="px-4 py-2">{{ crypto.current_price | currency }}</td>
-          <td class="px-4 py-2">{{ crypto.market_cap | number }}</td>
-          <td class="px-4 py-2">{{ crypto.total_volume | number }}</td>
-          <td class="px-4 py-2">{{ crypto.high_24h | currency }}</td>
-          <td class="px-4 py-2">{{ crypto.low_24h | currency }}</td>
-          <td class="px-4 py-2">{{ crypto.price_change_percentage_24h | percent }}</td>
-          <td class="px-4 py-2">{{ crypto.circulating_supply | number }}</td>
+        <tr
+          *ngFor="let crypto of cryptocurrencies$ | async; trackBy: trackByFn"
+          class="border-b"
+        >
+          <td *ngIf="'id' | columnRow" class="px-4 py-2">{{ crypto.id }}</td>
+          <td *ngIf="'name' | columnRow" class="px-4 py-2">
+            {{ crypto.name }}
+          </td>
+          <td *ngIf="'symbol' | columnRow" class="px-4 py-2">
+            {{ crypto.symbol }}
+          </td>
+          <td *ngIf="'current_price' | columnRow" class="px-4 py-2">
+            {{ crypto.current_price | currency }}
+          </td>
+          <td *ngIf="'market_cap' | columnRow" class="px-4 py-2">
+            {{ crypto.market_cap | number }}
+          </td>
+          <td *ngIf="'total_volume' | columnRow" class="px-4 py-2">
+            {{ crypto.total_volume | number }}
+          </td>
+          <td *ngIf="'high_24h' | columnRow" class="px-4 py-2">
+            {{ crypto.high_24h | currency }}
+          </td>
+          <td *ngIf="'low_24h' | columnRow" class="px-4 py-2">
+            {{ crypto.low_24h | currency }}
+          </td>
+          <td
+            *ngIf="'price_change_percentage_24h' | columnRow"
+            class="px-4 py-2"
+          >
+            {{ crypto.price_change_percentage_24h | percent }}
+          </td>
+          <td *ngIf="'circulating_supply' | columnRow" class="px-4 py-2">
+            {{ crypto.circulating_supply | number }}
+          </td>
         </tr>
-      </ng-container>
-
       </tbody>
     </table>
   </div>
+  <div class="flex justify-between items-center mt-4">
+    <div>
+      <button
+        class="border p-2 mr-2"
+        [disabled]="currentPage === '1'"
+        (click)="relativeChange(-1)"
+      >
+        Previous
+      </button>
+      <button class="border p-2" (click)="relativeChange(1)">Next</button>
+    </div>
+  </div>
 </div>
+<div [chart]="chart"></div>

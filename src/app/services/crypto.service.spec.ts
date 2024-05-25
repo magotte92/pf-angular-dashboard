@@ -1,35 +1,91 @@
-import { CryptoService } from './crypto.service';
-import { of } from 'rxjs';
-import { CryptoResponseModel } from '@pf-app/models';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { CryptoService } from '@pf-app/services';
+import { environment } from 'environments/environment';
+import { CryptoCoin, CryptoParams, CryptoResponse } from '@pf-app/models';
+import { toHttpParams } from '@pf-app/utils';
 
 describe('CryptoService', () => {
-  it('should fetch cryptocurrency data successfully from API when called', () => {
-    // Given
-    const http = jasmine.createSpyObj('HttpClient', ['get']);
-    const expectedData: CryptoResponseModel[] = [
-      {
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        current_price: 50000,
-        market_cap: 1000000,
-        total_volume: 50000,
-        high_24h: 51000,
-        low_24h: 49000,
-        price_change_percentage_24h: 2,
-        circulating_supply: 18000000
-      }
-    ];
-    http.get.and.returnValue(of(expectedData));
-    const service = new CryptoService(http);
+  let service: CryptoService;
+  let httpMock: HttpTestingController;
+  let params: CryptoParams;
 
-    // When
-    const result = service.getCryptos();
-
-    // Then
-    result.subscribe(data => {
-      expect(data).toEqual(expectedData);
-      expect(http.get).toHaveBeenCalled();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CryptoService]
     });
+    service = TestBed.inject(CryptoService);
+    httpMock = TestBed.inject(HttpTestingController);
+    params = {
+      page: '1',
+      per_page: '10',
+      sparkline: false,
+      order: 'market_cap_desc',
+      vs_currency: 'eur'
+    };
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+    localStorage.clear();
+  });
+
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
+
+  it('should fetch data from API if not in dev mode or no local storage data', () => {
+    const dummyResponse: CryptoCoin[] = [
+      { id: 'bitcoin', name: 'Bitcoin' } as CryptoCoin
+    ];
+
+    service.getCryptos$(params).subscribe((res: CryptoResponse) => {
+      expect(res.data).toEqual(dummyResponse);
+      expect(res.page).toEqual('1');
+    });
+
+    const req = httpMock.expectOne(
+      `${environment.apiUrl}?${toHttpParams(params).toString()}`
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(dummyResponse);
+    httpMock.verify(); // Ensure there are no pending requests
+  });
+
+  it('should handle non-JSON data in localStorage', () => {
+    localStorage.setItem('cryptos', 'not a json');
+    localStorage.setItem('currentPage', '1');
+    spyOn(console, 'error');
+
+    service.getCryptos$(params).subscribe((res: CryptoResponse) => {
+      expect(res).toBeUndefined();
+      expect(console.error).toHaveBeenCalledWith(
+        '[CryptoService]: JSON has unexpected formatting'
+      );
+    });
+    httpMock.verify(); // Ensure there are no pending requests
+  });
+
+  it('should catch HTTP error', () => {
+    spyOn(console, 'error');
+
+    service.getCryptos$(params).subscribe(
+      () => fail('expected an error, not cryptos'),
+      (error) => {
+        expect(error).toBeDefined();
+        expect(console.error).toHaveBeenCalled();
+      }
+    );
+
+    const req = httpMock.expectOne(
+      `${environment.apiUrl}?${toHttpParams(params).toString()}`
+    );
+    expect(req.request.method).toBe('GET');
+
+    req.flush('error', { status: 500, statusText: 'Server Error' });
+
+    // Ensures that there are no pending HTTP requests
+    httpMock.verify();
   });
 });

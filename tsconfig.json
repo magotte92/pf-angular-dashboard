@@ -7,7 +7,11 @@
       "@pf-app": ["app/*"],
       "@pf-app/models": ["app/models"],
       "@pf-app/components": ["app/components"],
-      "@pf-app/services": ["app/services"]
+      "@pf-app/services": ["app/services"],
+      "@pf-app/types": ["app/types"],
+      "@pf-app/utils": ["app/utils"],
+      "@pf-app/pipes": ["app/pipes"],
+      "@pf-app/store": ["app/state"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
