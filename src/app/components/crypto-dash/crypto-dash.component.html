@@ -1,0 +1,38 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-2xl font-bold mb-4 text-center">Cryptocurrency Market</h1>
+  <div class="overflow-x-auto shadow-lg rounded-lg">
+    <table class="min-w-full bg-white rounded-lg">
+      <thead>
+      <tr class="bg-gray-800 text-white">
+        <th class="px-4 py-2">ID</th>
+        <th class="px-4 py-2">Name</th>
+        <th class="px-4 py-2">Symbol</th>
+        <th class="px-4 py-2">Current Price</th>
+        <th class="px-4 py-2">Market Cap</th>
+        <th class="px-4 py-2">Total Volume</th>
+        <th class="px-4 py-2">High 24h</th>
+        <th class="px-4 py-2">Low 24h</th>
+        <th class="px-4 py-2">Price Change 24h (%)</th>
+        <th class="px-4 py-2">Circulating Supply</th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngIf="cryptoService.getCryptos() | async as cryptos">
+        <tr *ngFor="let crypto of cryptos" class="hover:bg-gray-100 border-b border-gray-200">
+          <td class="px-4 py-2">{{ crypto.id }}</td>
+          <td class="px-4 py-2">{{ crypto.name }}</td>
+          <td class="px-4 py-2">{{ crypto.symbol }}</td>
+          <td class="px-4 py-2">{{ crypto.current_price | currency }}</td>
+          <td class="px-4 py-2">{{ crypto.market_cap | number }}</td>
+          <td class="px-4 py-2">{{ crypto.total_volume | number }}</td>
+          <td class="px-4 py-2">{{ crypto.high_24h | currency }}</td>
+          <td class="px-4 py-2">{{ crypto.low_24h | currency }}</td>
+          <td class="px-4 py-2">{{ crypto.price_change_percentage_24h | percent }}</td>
+          <td class="px-4 py-2">{{ crypto.circulating_supply | number }}</td>
+        </tr>
+      </ng-container>
+
+      </tbody>
+    </table>
+  </div>
+</div>
