@@ -9,9 +9,11 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimations(),
     provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(),
@@ -22,7 +24,8 @@ export const appConfig: ApplicationConfig = {
       logOnly: !isDevMode(),
       autoPause: true,
       trace: false,
-      traceLimit: 75,
-    }), provideAnimationsAsync(),
-  ],
+      traceLimit: 75
+    }),
+    provideAnimationsAsync()
+  ]
 };

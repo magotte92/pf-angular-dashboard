@@ -5,6 +5,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable } from 'rxjs';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   let actions: Observable<any>;
@@ -13,6 +14,7 @@ describe('AppComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
       providers: [
+        provideAnimations(),
         provideHttpClientTesting(),
         provideMockActions(() => actions),
         provideMockStore(),

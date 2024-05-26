@@ -1,7 +1,6 @@
 // column-row.pipe.spec.ts
 import { ColumnRowPipe } from './column-row.pipe';
 import { DISPLAYED_COLUMNS } from '@pf-app/components';
-import { CryptoCoin } from '@pf-app/models';
 
 describe('ColumnRowPipe', () => {
   let pipe: ColumnRowPipe;

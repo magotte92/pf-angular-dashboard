@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 import { CryptoService } from '@pf-app/services';
 import { environment } from 'environments/environment';
 import { CryptoCoin, CryptoParams, CryptoResponse } from '@pf-app/models';
@@ -13,7 +16,7 @@ describe('CryptoService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [CryptoService]
+      providers: [CryptoService],
     });
     service = TestBed.inject(CryptoService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -22,7 +25,7 @@ describe('CryptoService', () => {
       per_page: '10',
       sparkline: false,
       order: 'market_cap_desc',
-      vs_currency: 'eur'
+      vs_currency: 'eur',
     };
   });
 
@@ -37,7 +40,7 @@ describe('CryptoService', () => {
 
   it('should fetch data from API if not in dev mode or no local storage data', () => {
     const dummyResponse: CryptoCoin[] = [
-      { id: 'bitcoin', name: 'Bitcoin' } as CryptoCoin
+      { id: 'bitcoin', name: 'Bitcoin' } as CryptoCoin,
     ];
 
     service.getCryptos$(params).subscribe((res: CryptoResponse) => {
@@ -46,7 +49,7 @@ describe('CryptoService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}?${toHttpParams(params).toString()}`
+      `${environment.apiUrl}?${toHttpParams(params).toString()}`,
     );
     expect(req.request.method).toBe('GET');
     req.flush(dummyResponse);
@@ -61,7 +64,7 @@ describe('CryptoService', () => {
     service.getCryptos$(params).subscribe((res: CryptoResponse) => {
       expect(res).toBeUndefined();
       expect(console.error).toHaveBeenCalledWith(
-        '[CryptoService]: JSON has unexpected formatting'
+        '[CryptoService]: JSON has unexpected formatting',
       );
     });
     httpMock.verify(); // Ensure there are no pending requests
@@ -75,11 +78,11 @@ describe('CryptoService', () => {
       (error) => {
         expect(error).toBeDefined();
         expect(console.error).toHaveBeenCalled();
-      }
+      },
     );
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}?${toHttpParams(params).toString()}`
+      `${environment.apiUrl}?${toHttpParams(params).toString()}`,
     );
     expect(req.request.method).toBe('GET');
 

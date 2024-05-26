@@ -40,6 +40,14 @@
   min-width: 100%;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
 @media (min-width: 768px) {
   .crypto-dash-container {
     flex-direction: column;

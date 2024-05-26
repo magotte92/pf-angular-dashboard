@@ -1,59 +1,170 @@
-<ng-container *ngIf="cryptocurrencies$ | async; else loading">
+<ng-container *ngIf="cryptoCall$ | async; else loading">
   <div class="crypto-dash-container">
-    <div [chart]="chart" class="chart-container" aria-label="Cryptocurrency Market Capitalization Chart"></div>
+    <highcharts-chart
+      aria-label="Cryptocurrency Market Capitalization Chart"
+      class="chart-container"
+      [Highcharts]="Highcharts"
+      [options]="chartOptions"
+      [(update)]="updateFlag"
+    ></highcharts-chart>
     <div class="table-container" aria-label="Cryptocurrency Data Table">
       <div class="search-container">
         <mat-form-field appearance="fill" class="search-field">
           <mat-label>Search</mat-label>
-          <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)" placeholder="Search..." />
+          <input
+            matInput
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange($event)"
+            placeholder="Search..."
+          />
         </mat-form-field>
       </div>
       <div class="mat-elevation-z8 table-wrapper">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-table" role="table">
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          class="mat-table"
+          role="table"
+        >
           <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Name </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.name }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Name
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.name }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="symbol">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Symbol </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.symbol }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Symbol
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.symbol }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="current_price">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Current Price </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.current_price | currency }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Current Price
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.current_price | currency }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="market_cap">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Market Cap </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.market_cap | number }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Market Cap
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.market_cap | number }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="total_volume">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Total Volume </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.total_volume | number }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Total Volume
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.total_volume | number }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="high_24h">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> High 24h </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.high_24h | currency }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              High 24h
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.high_24h | currency }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="low_24h">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Low 24h </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.low_24h | currency }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Low 24h
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.low_24h | currency }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="price_change_percentage_24h">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Price Change % (24h) </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.price_change_percentage_24h | percent }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Price Change % (24h)
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.price_change_percentage_24h | percent }}
+            </td>
           </ng-container>
           <ng-container matColumnDef="circulating_supply">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Circulating Supply </th>
-            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.circulating_supply | number }} </td>
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              role="columnheader"
+            >
+              Circulating Supply
+            </th>
+            <td mat-cell *matCellDef="let crypto" role="cell">
+              {{ crypto.circulating_supply | number }}
+            </td>
           </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns" role="row"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;" role="row"></tr>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="displayedColumns"
+            role="row"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            role="row"
+          ></tr>
         </table>
       </div>
-      <mat-paginator [pageSizeOptions]="PER_PAGE" showFirstLastButtons></mat-paginator>
+      <mat-paginator
+        [pageSizeOptions]="PER_PAGE"
+        showFirstLastButtons
+      ></mat-paginator>
     </div>
   </div>
 </ng-container>
 <ng-template #loading>
-  <mat-spinner></mat-spinner>
+  <div class="spinner-container">
+    <mat-spinner></mat-spinner>
+  </div>
 </ng-template>
