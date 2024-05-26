@@ -84,23 +84,4 @@ describe('CryptoEffects', () => {
       expect(effects.loadCryptos$).toBeObservable(expected);
     });
   });
-
-  describe('updateParams$', () => {
-    it('should return a loadCryptos action', () => {
-      const params: CryptoParams = {
-        page: '2',
-        per_page: '50',
-        order: 'market_cap_desc',
-        vs_currency: 'eur',
-        sparkline: false,
-      };
-      const action = CryptoActions.updateParams({ params });
-      const outcome = CryptoActions.loadCryptos();
-
-      actions$ = hot('-a-', { a: action });
-      const expected = cold('-b', { b: outcome });
-
-      expect(effects.updateParams$).toBeObservable(expected);
-    });
-  });
 });

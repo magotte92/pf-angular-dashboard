@@ -22,8 +22,10 @@
       <div class="mat-elevation-z8 table-wrapper">
         <table
           mat-table
-          [dataSource]="dataSource"
           matSort
+          [dataSource]="dataSource"
+          (contentChanged)="updateChart()"
+          (matSortChange)="updateChart($event)"
           class="mat-table"
           role="table"
         >

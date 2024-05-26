@@ -9,8 +9,7 @@ import { loadCryptos } from '@pf-app/store';
   standalone: true,
   imports: [RouterOutlet],
   providers: [HttpClient],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {
   title = 'pf-angular-dashboard';

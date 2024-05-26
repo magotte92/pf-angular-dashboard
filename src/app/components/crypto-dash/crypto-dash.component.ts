@@ -1,17 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { CryptoCoin, CryptoParams } from '@pf-app/models';
-import { Max250, StringNumber } from '@pf-app/types';
-import { first, Observable, tap } from 'rxjs';
-import {
-  selectAllCryptos,
-  selectCryptoError,
-  selectCryptoLoading,
-  selectCryptoParams,
-} from '@pf-app/store';
+import { CryptoCoin } from '@pf-app/models';
+import { Observable, tap } from 'rxjs';
+import { selectAllCryptos } from '@pf-app/store';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -27,6 +21,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { HighchartsChartModule } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 const ANGULAR_CORE = [FormsModule, NgIf, NgForOf];
 
@@ -38,6 +33,7 @@ const ANGULAR_MATERIAL = [
   MatSortModule,
   MatSelectModule,
   MatProgressSpinnerModule,
+  MatCheckbox,
 ];
 
 const PIPES = [DecimalPipe, PercentPipe, CurrencyPipe, AsyncPipe];
@@ -55,13 +51,9 @@ const PIPES = [DecimalPipe, PercentPipe, CurrencyPipe, AsyncPipe];
   styleUrls: ['./crypto-dash.component.css'],
 })
 export class CryptoDashComponent implements OnInit {
+  currentSorting?: Sort;
   cryptoCall$: Observable<CryptoCoin[]>;
   updateFlag = false;
-  loading$?: Observable<boolean> = this.store.select(selectCryptoLoading);
-  error$?: Observable<string | null> = this.store.select(selectCryptoError);
-  params!: CryptoParams;
-  currentPage: StringNumber = '1';
-  perPage: Max250 = '10';
   searchQuery = '';
   Highcharts: typeof Highcharts = Highcharts;
   dataSource = new MatTableDataSource<CryptoCoin>();
@@ -76,8 +68,6 @@ export class CryptoDashComponent implements OnInit {
     'price_change_percentage_24h',
     'circulating_supply',
   ];
-  chartData = [];
-
   chartOptions: Highcharts.Options = {
     title: {
       text: 'Top Cryptocurrencies by Market Capitalization',
@@ -86,7 +76,7 @@ export class CryptoDashComponent implements OnInit {
       {
         name: 'Market Cap',
         type: 'column',
-        data: this.chartData,
+        data: [],
       },
     ],
     xAxis: {
@@ -107,20 +97,11 @@ export class CryptoDashComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private store: Store) {
-    this.store
-      .select(selectCryptoParams)
-      .pipe(first())
-      .subscribe({
-        next: (params) => (this.params = params),
-      });
     this.cryptoCall$ = this.store.select(selectAllCryptos).pipe(
       tap((cryptos) => {
         this.dataSource.data = cryptos;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        const categories = cryptos.map((coin) => coin.name);
-        const data = cryptos.map((coin) => coin.market_cap);
-        this.updateChart(categories, data);
       }),
     );
   }
@@ -136,7 +117,41 @@ export class CryptoDashComponent implements OnInit {
     this.dataSource.filter = searchQuery.trim().toLowerCase();
   }
 
-  private updateChart(categories: string[], data: number[]) {
+  updateChart(sortState?: Sort) {
+    if (
+      !this.dataSource.data ||
+      this.paginator?.pageIndex === undefined ||
+      this.paginator?.pageSize === undefined
+    ) {
+      return;
+    }
+    if (sortState && sortState !== this.currentSorting) {
+      this.currentSorting = sortState;
+    }
+    const startIndex = this.paginator.pageIndex * this.paginator.pageSize;
+    const endIndex = startIndex + this.paginator.pageSize;
+    let sortedData;
+    if (this.currentSorting) {
+      const { active, direction } = this.currentSorting;
+      sortedData = this.dataSource.filteredData.slice().sort((a, b) => {
+        const valueA = a[active as keyof CryptoCoin];
+        const valueB = b[active as keyof CryptoCoin];
+
+        let comparison = 0;
+        if (valueA > valueB) {
+          comparison = 1;
+        } else if (valueA < valueB) {
+          comparison = -1;
+        }
+
+        return direction === 'asc' ? comparison : -comparison;
+      });
+    }
+    const filteredData = (
+      sortedData ? sortedData : this.dataSource.filteredData
+    ).slice(startIndex, endIndex);
+    const categories = filteredData.map((c) => c.id);
+    const data = filteredData.map((c) => c.market_cap);
     this.chartOptions = {
       ...this.chartOptions,
       xAxis: {
@@ -153,5 +168,5 @@ export class CryptoDashComponent implements OnInit {
     this.updateFlag = true;
   }
 
-  protected readonly PER_PAGE = [5, 10, 25, 100];
+  protected readonly PER_PAGE = [5, 10, 25];
 }

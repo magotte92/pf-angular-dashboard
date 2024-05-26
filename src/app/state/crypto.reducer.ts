@@ -1,8 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import * as CryptoActions from './crypto.actions';
 import { CryptocurrencyState } from '@pf-app/models';
-import { PER_PAGE } from '@pf-app/components';
-import { Max250 } from '@pf-app/types';
 
 export const initialState: CryptocurrencyState = {
   data: [],
@@ -11,10 +9,7 @@ export const initialState: CryptocurrencyState = {
   params: {
     vs_currency: 'usd',
     order: 'market_cap_desc',
-    per_page:
-      PER_PAGE?.length && PER_PAGE.length > 0
-        ? (PER_PAGE[0].toString() as Max250)
-        : '10',
+    per_page: '250',
     page: '1',
     sparkline: false,
   },

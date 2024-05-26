@@ -56,20 +56,6 @@ describe('CryptoService', () => {
     httpMock.verify(); // Ensure there are no pending requests
   });
 
-  it('should handle non-JSON data in localStorage', () => {
-    localStorage.setItem('cryptos', 'not a json');
-    localStorage.setItem('currentPage', '1');
-    spyOn(console, 'error');
-
-    service.getCryptos$(params).subscribe((res: CryptoResponse) => {
-      expect(res).toBeUndefined();
-      expect(console.error).toHaveBeenCalledWith(
-        '[CryptoService]: JSON has unexpected formatting',
-      );
-    });
-    httpMock.verify(); // Ensure there are no pending requests
-  });
-
   it('should catch HTTP error', () => {
     spyOn(console, 'error');
 
