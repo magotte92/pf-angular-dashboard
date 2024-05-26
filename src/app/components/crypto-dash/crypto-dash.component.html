@@ -1,90 +1,59 @@
-<div class="container mx-auto p-4">
-  <div class="flex justify-between items-center mb-4">
-    <input
-      type="text"
-      placeholder="Search..."
-      class="border p-2 w-full md:w-1/3"
-      [(ngModel)]="searchQuery"
-      (ngModelChange)="onSearchChange($event)"
-    />
-    <div class="flex items-center ml-4">
-      <label for="perPage" class="mr-2">Items per page:</label>
-      <select
-        id="perPage"
-        class="border p-2"
-        [(ngModel)]="perPage"
-        (ngModelChange)="onPerPageChange($event)"
-      >
-        <option
-          *ngFor="let pageNo of PER_PAGE"
-          [ngValue]="pageNo"
-          [value]="pageNo"
-        >
-          {{ pageNo }}
-        </option>
-      </select>
+<ng-container *ngIf="cryptocurrencies$ | async; else loading">
+  <div class="crypto-dash-container">
+    <div [chart]="chart" class="chart-container" aria-label="Cryptocurrency Market Capitalization Chart"></div>
+    <div class="table-container" aria-label="Cryptocurrency Data Table">
+      <div class="search-container">
+        <mat-form-field appearance="fill" class="search-field">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (ngModelChange)="onSearchChange($event)" placeholder="Search..." />
+        </mat-form-field>
+      </div>
+      <div class="mat-elevation-z8 table-wrapper">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-table" role="table">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Name </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.name }} </td>
+          </ng-container>
+          <ng-container matColumnDef="symbol">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Symbol </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.symbol }} </td>
+          </ng-container>
+          <ng-container matColumnDef="current_price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Current Price </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.current_price | currency }} </td>
+          </ng-container>
+          <ng-container matColumnDef="market_cap">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Market Cap </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.market_cap | number }} </td>
+          </ng-container>
+          <ng-container matColumnDef="total_volume">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Total Volume </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.total_volume | number }} </td>
+          </ng-container>
+          <ng-container matColumnDef="high_24h">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> High 24h </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.high_24h | currency }} </td>
+          </ng-container>
+          <ng-container matColumnDef="low_24h">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Low 24h </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.low_24h | currency }} </td>
+          </ng-container>
+          <ng-container matColumnDef="price_change_percentage_24h">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Price Change % (24h) </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.price_change_percentage_24h | percent }} </td>
+          </ng-container>
+          <ng-container matColumnDef="circulating_supply">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header role="columnheader"> Circulating Supply </th>
+            <td mat-cell *matCellDef="let crypto" role="cell"> {{ crypto.circulating_supply | number }} </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" role="row"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" role="row"></tr>
+        </table>
+      </div>
+      <mat-paginator [pageSizeOptions]="PER_PAGE" showFirstLastButtons></mat-paginator>
     </div>
   </div>
-  <div class="overflow-x-auto">
-    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-      <thead class="bg-gray-800 text-white">
-        <tr>
-          <th *ngFor="let column of DISPLAYED_COLUMNS" class="py-2">
-            {{ column.replaceAll('_', ' ') | titlecase }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="let crypto of cryptocurrencies$ | async; trackBy: trackByFn"
-          class="border-b"
-        >
-          <td *ngIf="'id' | columnRow" class="px-4 py-2">{{ crypto.id }}</td>
-          <td *ngIf="'name' | columnRow" class="px-4 py-2">
-            {{ crypto.name }}
-          </td>
-          <td *ngIf="'symbol' | columnRow" class="px-4 py-2">
-            {{ crypto.symbol }}
-          </td>
-          <td *ngIf="'current_price' | columnRow" class="px-4 py-2">
-            {{ crypto.current_price | currency }}
-          </td>
-          <td *ngIf="'market_cap' | columnRow" class="px-4 py-2">
-            {{ crypto.market_cap | number }}
-          </td>
-          <td *ngIf="'total_volume' | columnRow" class="px-4 py-2">
-            {{ crypto.total_volume | number }}
-          </td>
-          <td *ngIf="'high_24h' | columnRow" class="px-4 py-2">
-            {{ crypto.high_24h | currency }}
-          </td>
-          <td *ngIf="'low_24h' | columnRow" class="px-4 py-2">
-            {{ crypto.low_24h | currency }}
-          </td>
-          <td
-            *ngIf="'price_change_percentage_24h' | columnRow"
-            class="px-4 py-2"
-          >
-            {{ crypto.price_change_percentage_24h | percent }}
-          </td>
-          <td *ngIf="'circulating_supply' | columnRow" class="px-4 py-2">
-            {{ crypto.circulating_supply | number }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="flex justify-between items-center mt-4">
-    <div>
-      <button
-        class="border p-2 mr-2"
-        [disabled]="currentPage === '1'"
-        (click)="relativeChange(-1)"
-      >
-        Previous
-      </button>
-      <button class="border p-2" (click)="relativeChange(1)">Next</button>
-    </div>
-  </div>
-</div>
-<div [chart]="chart"></div>
+</ng-container>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

@@ -8,6 +8,7 @@ import { CryptoEffects, cryptoReducer } from '@pf-app/store';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,6 @@ export const appConfig: ApplicationConfig = {
       autoPause: true,
       trace: false,
       traceLimit: 75,
-    }),
+    }), provideAnimationsAsync(),
   ],
 };
