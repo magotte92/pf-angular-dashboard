@@ -1,4 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CryptoCoin } from '@pf-app/models';
 import { Observable, tap } from 'rxjs';
@@ -14,16 +19,13 @@ import {
   AsyncPipe,
   CurrencyPipe,
   DecimalPipe,
-  NgForOf,
-  NgIf,
   PercentPipe,
 } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HighchartsChartModule } from 'highcharts-angular';
-import * as Highcharts from 'highcharts';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { HighchartsChartComponent } from 'highcharts-angular';
+import type * as Highcharts from 'highcharts';
 
-const ANGULAR_CORE = [FormsModule, NgIf, NgForOf];
+const ANGULAR_CORE = [FormsModule];
 
 const ANGULAR_MATERIAL = [
   MatFormFieldModule,
@@ -33,7 +35,6 @@ const ANGULAR_MATERIAL = [
   MatSortModule,
   MatSelectModule,
   MatProgressSpinnerModule,
-  MatCheckbox,
 ];
 
 const PIPES = [DecimalPipe, PercentPipe, CurrencyPipe, AsyncPipe];
@@ -45,9 +46,10 @@ const PIPES = [DecimalPipe, PercentPipe, CurrencyPipe, AsyncPipe];
     ...ANGULAR_CORE,
     ...PIPES,
     ...ANGULAR_MATERIAL,
-    HighchartsChartModule,
+    HighchartsChartComponent,
   ],
   templateUrl: './crypto-dash.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./crypto-dash.component.css'],
 })
 export class CryptoDashComponent implements OnInit {
@@ -55,7 +57,6 @@ export class CryptoDashComponent implements OnInit {
   cryptoCall$: Observable<CryptoCoin[]>;
   updateFlag = false;
   searchQuery = '';
-  Highcharts: typeof Highcharts = Highcharts;
   dataSource = new MatTableDataSource<CryptoCoin>();
   displayedColumns: string[] = [
     'name',

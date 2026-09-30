@@ -2,16 +2,16 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "src",
     "paths": {
-      "@pf-app": ["app/*"],
-      "@pf-app/models": ["app/models"],
-      "@pf-app/components": ["app/components"],
-      "@pf-app/services": ["app/services"],
-      "@pf-app/types": ["app/types"],
-      "@pf-app/utils": ["app/utils"],
-      "@pf-app/pipes": ["app/pipes"],
-      "@pf-app/store": ["app/state"]
+      "@pf-app": ["./src/app/*"],
+      "@pf-app/models": ["./src/app/models"],
+      "@pf-app/components": ["./src/app/components"],
+      "@pf-app/services": ["./src/app/services"],
+      "@pf-app/types": ["./src/app/types"],
+      "@pf-app/utils": ["./src/app/utils"],
+      "@pf-app/pipes": ["./src/app/pipes"],
+      "@pf-app/store": ["./src/app/state"],
+      "environments/*": ["./src/environments/*"]
     },
     "outDir": "./dist/out-tsc",
     "strict": true,
@@ -24,15 +24,12 @@
     "sourceMap": true,
     "declaration": false,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "lib": ["ES2022", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

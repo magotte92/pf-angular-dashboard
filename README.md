@@ -1,15 +1,17 @@
 # Crypto Dashboard
-[![Angular](https://img.shields.io/badge/Angular-v17.3-f51954?logo=angular&logoColor=f51954)](https://angular.io/)
-[![Angular Material](https://img.shields.io/badge/Angular%20Material-v17.3.0-055cb7?logo=angular&logoColor=055cb7)](https://material.angular.io/)
-[![NgRx](https://img.shields.io/badge/NgRx-v17.2-5c207d?logo=ngrx&logoColor=5c207d)](https://ngrx.io/)
+[![Angular](https://img.shields.io/badge/Angular-v22.2-f51954?logo=angular&logoColor=f51954)](https://angular.io/)
+[![Angular Material](https://img.shields.io/badge/Angular%20Material-v22.2-055cb7?logo=angular&logoColor=055cb7)](https://material.angular.io/)
+[![NgRx](https://img.shields.io/badge/NgRx-v22.0-5c207d?logo=ngrx&logoColor=5c207d)](https://ngrx.io/)
 [![RxJS](https://img.shields.io/badge/RxJS-v7.8-fc108f?logo=reactivex&logoColor=fc108f)](https://rxjs.dev/)
-[![Highcharts](https://img.shields.io/badge/Highcharts-v4-6799a0?logo=highcharts&logoColor=6799a0)](https://www.highcharts.com/)
+[![Highcharts](https://img.shields.io/badge/Highcharts-v13-6799a0?logo=highcharts&logoColor=6799a0)](https://www.highcharts.com/)
 
 ## Description
 
 This project is an Angular-based dashboard application that fetches data from the CoinGecko API and displays it in a data table with filtering, sorting, search, and pagination functionalities. It also visualizes the data in a chart using Highcharts. The state management is handled using NgRx, and RxJS is used for data transportation and manipulation.
 
 ## Setup
+
+Requires Node.js 24.15+ (Active LTS) or Node.js 22.22.3+ (Maintenance LTS). See `.nvmrc`.
 
 1. Clone the repository
 2. Install dependencies: `npm install`
