@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
@@ -9,6 +9,7 @@ import { loadCryptos } from '@pf-app/store';
   standalone: true,
   imports: [RouterOutlet],
   providers: [HttpClient],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: '<router-outlet></router-outlet>',
 })
 export class AppComponent {

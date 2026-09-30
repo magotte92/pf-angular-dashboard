@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
-  let actions: Observable<any>;
+  let actions!: Observable<unknown>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
