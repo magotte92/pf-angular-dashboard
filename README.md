@@ -9,6 +9,8 @@
 
 This project is an Angular-based dashboard application that fetches data from the CoinGecko API and displays it in a data table with filtering, sorting, search, and pagination functionalities. It also visualizes the data in a chart using Highcharts. The state management is handled using NgRx, and RxJS is used for data transportation and manipulation.
 
+Modernization direction (zoneless Angular, Tailwind CSS, signals and services): [PLAN.md](./PLAN.md).
+
 ## Setup
 
 Requires Node.js 24.15+ (Active LTS) or Node.js 22.22.3+ (Maintenance LTS). See `.nvmrc`.
